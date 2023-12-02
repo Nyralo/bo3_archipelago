@@ -1,0 +1,48 @@
+>mode,zm
+>type,common
+
+#include "zm_mod.class"
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+rawfile,dummy.cfg
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//To load our code into the main game
+scriptparsetree,scripts/zm/_load.gsc
+scriptparsetree,scripts/zm/_load.csc
+
+//Core item getting/setting
+scriptparsetree,scripts/zm/archi_core.gsc
+scriptparsetree,scripts/zm/archi_core.csc
+scriptparsetree,scripts/zm/archi_items.gsc
+
+//Perk System Logic Override
+scriptparsetree,scripts/zm/_zm_perks.gsc
+//PAP Logic override
+scriptparsetree,scripts/zm/_zm_pack_a_punch.gsc
+//Weapon/Wallbuy Logic Overrise
+scriptparsetree,scripts/zm/_zm_weapons.gsc
+
+//The point our UI injects its widget
+rawfile,ui/uieditor/widgets/bubblegumbuffs/BubbleGumPackInGame.Lua
+
+//The Display that Archipelago hooks its code into
+rawfile,ui/archipelago/ingame/widgets/ArchipelagoDisplay.lua
+rawfile,ui/archipelago/ingame/widgets/ArchipelagoDisplayClient.lua
+
+//Archipelago Tracker Lua Display
+rawfile,ui/archipelago/ingame/widgets/ArchipelagoTracker.lua
+
+//Archipelago Messages Lua Display
+rawfile,ui/archipelago/ingame/widgets/ArchipelagoMessageContainer.lua
+
+//Archipelago Client
+rawfile,archipelago/ArchipelagoClient.lua
+rawfile,archipelago/Utils.lua
+
+
+//Images
+image,archipelago_logo_up
+image,archipelago_logo_down
+image,archipelago_power_switch_perk
+image,archipelago_wallbuys_perk

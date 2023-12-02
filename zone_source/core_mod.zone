@@ -1,0 +1,25 @@
+>mode,core
+>type,common
+
+#include "core_mod.class"
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// you should keep these defaults cfg in core_mod and always include them in your mods this is to prevent the game from hitching when it needs to execute them
+rawfile,mod.cfg
+rawfile,cp_mod.cfg
+rawfile,mp_mod.cfg
+rawfile,zm_mod.cfg
+// note that if you make changes in the cfg, you need to build this fastfile for the game to get the latest
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Lobby Menu
+rawfile,ui/t6/lobby/lobbymenubuttons.lua
+rawfile,ui/t6/lobby/lobbymenubuttons_og.luac
+rawfile,ui/t6/lobby/lobbymenus.lua
+
+//Custom Settings Menu
+rawfile,ui/archipelago/frontend/ArchipelagoSettings.lua
+
+//Customized T7 Overcharged helper scripts
+rawfile,ui/util/T7Overcharged.lua
+rawfile,ui/util/T7OverchargedUtil.lua

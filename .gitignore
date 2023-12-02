@@ -1,0 +1,6 @@
+zone/*
+zone_source/all/*
+zone_source/english/*
+zone_source/loc/*
+
+*.pdn

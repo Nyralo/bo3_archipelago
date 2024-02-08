@@ -1,3 +1,13 @@
+# Install Instructions
+1. Get the mod folder from Releases
+2. Copy it to `Call of Duty Black Ops III\mods` 
+# Usage Instructions
+1. Load the mod in the mod menu
+2. Use the Archipelago Menu to Validate your slot/connection to the AP World
+![image1.png](/assets/image1.png)
+![image2.png](/assets/image2.png)
+3. Use the In-Game tracker to see what map areas, perk machines, and other items you have unlocked
+![image3.png](/assets/image3.png)
 # Special Thanks
 T7 Overcharged https://github.com/JariKCoding/T7Overcharged, which I heavily mangled to run the AP Code
 APClientPP - Used to implement the Archipelago Networking Protocol

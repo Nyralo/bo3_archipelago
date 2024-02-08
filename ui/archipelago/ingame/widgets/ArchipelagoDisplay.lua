@@ -9,20 +9,7 @@ if (Engine.IsZombiesGame()) then
 	  workshopid = nil
 	})
   end
-  --
 
---Temp
--- require("ui.util.T7Overcharged")
--- --
-
--- InitializeT7Overcharged({
--- 	modname  = "bo3_archipelago",
--- 	filespath = [[.\mods\bo3_archipelago\]],
--- 	workshopid = nil,
--- 	discordAppId = nil,
--- 	showExternalConsole = true
--- })
---
 CoD.ArchipelagoDisplay = InheritFrom( LUI.UIElement )
 CoD.ArchipelagoDisplay.new = function (menu, controller)
 

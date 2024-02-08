@@ -131,10 +131,12 @@ function private spawn_init()
 		use_trigger.zbarrier.targetname = "vending_packapunch";
 
 		// Set up power interactions.
-		powered_on = get_start_state();
+		//powered_on = get_start_state();
 		
-        use_trigger.powered = zm_power::add_powered_item( &turn_on, &turn_off, &get_range, &cost_func, ANY_POWER, powered_on, use_trigger );
+        //use_trigger.powered = zm_power::add_powered_item( &turn_on, &turn_off, &get_range, &cost_func, ANY_POWER, powered_on, use_trigger );
         //
+		//AP Handle Powered PAP ourselves
+		powered_on = false;
 
 		if ( IsDefined( level.pack_a_punch.custom_power_think ) )
 		{

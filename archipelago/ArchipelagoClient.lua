@@ -67,27 +67,21 @@ end
 Archi.KeepConnected = function ()
   
   if Archipelago then
-    --TODO: set these with DVARS
-    local server = "localhost"
-    local port = "38281"
-    local slot = "Nyralo"
-    -- local server = Engine.DvarString(nil,"ARCHIPELAGO_SERVER")
-    -- local port = Engine.DvarString(nil,"ARCHIPELAGO_PORT")
-    -- local slot = Engine.DvarString(nil,"ARCHIPELAGO_SLOT")
+    local server = Engine.DvarString(nil,"ARCHIPELAGO_SERVER")
+    local port = Engine.DvarString(nil,"ARCHIPELAGO_PORT")
+    local slot = Engine.DvarString(nil,"ARCHIPELAGO_SLOT")
     --TODO: error out if any of these are null
 
-    --TODO: change the \zone (base path)
+    --TODO: change the \zone (base path) when its workshop
     Archipelago.Connect(server..":"..port,slot,"zone\\")
     --TODO: only do this on an actual connect
     Engine.SetDvar( "ARCHIPELAGO_CONNECTED", "TRUE" )
   end
-  --TODO recheck login logic
 end
 
 
 function InitializeArchipelago(options)
     if Archipelago then 
-      Console.Print("AP Alredy Initiated")
       return false 
     end
 
@@ -97,16 +91,13 @@ function InitializeArchipelago(options)
 
     SafeCall(function()
         EnableGlobals()
-        --Console.Print("Attempting to Load: "..dllPath..dll)
         local dllInit = require("package").loadlib(dllPath..dll, "init")
   
         --Check if the dll was properly loaded
         if not dllInit then
-          --Console.Print("Failed to load "..dll)
           Engine.ComError( Enum.errorCode.ERROR_UI, "Unable to initialize "..dll )
           return
         end
-        --Console.Print("Loaded "..dll)
         -- Execute the dll
         dllInit()
     

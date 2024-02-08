@@ -8,36 +8,38 @@ require("ui.util.T7OverchargedUtil")
 
 EnableGlobals();
 
+
+UpdateConnectionStatus = function(update)
+	Engine.SetModelValue(Engine.GetModel(Engine.GetModel( Engine.GetGlobalModel(), "archipelago" ), "connectionValidated"),"Connection: "..update)
+end
+
 local ConnectArchi = function()
+	if Archipelago == nil then 
+		local modname = bo3_archipelago
+		local filespath = [[.\mods\bo3_archipelago\]]
+		local workshopid = nil
+		local dllPath = filespath .. [[zone\]] or [[..\..\workshop\content\311210\]] .. workshopid .. "\\"
+		local dll = "Archi-T7Overcharged.dll"
+
+		SafeCall(function()
+			EnableGlobals()
+			local dllInit = require("package").loadlib(dllPath..dll, "init")
+		
+			--Check if the dll was properly loaded
+			if not dllInit then
+				Engine.ComError( Enum.errorCode.ERROR_UI, "Unable to initialize "..dll )
+				return
+			end
+			dllInit()
+
+			end)
+	end
 	local server = Engine.DvarString(nil,"ARCHIPELAGO_SERVER")
 	local port = Engine.DvarString(nil,"ARCHIPELAGO_PORT")
 	local slot = Engine.DvarString(nil,"ARCHIPELAGO_SLOT")
-	if Archipelago then return false end
-	
-	local modname = bo3_archipelago
-	local filespath = [[.\mods\bo3_archipelago\]]
-	local workshopid = nil
-	local dllPath = filespath .. [[zone\]] or [[..\..\workshop\content\311210\]] .. workshopid .. "\\"
-	local dll = "Archi-T7Overcharged.dll"
 
-	SafeCall(function()
-		EnableGlobals()
-		local dllInit = require("package").loadlib(dllPath..dll, "init")
-	
-		--Check if the dll was properly loaded
-		if not dllInit then
-			Engine.ComError( Enum.errorCode.ERROR_UI, "Unable to initialize "..dll )
-			return
-		end
-		dllInit()
-
-		end)
-	    local server = Engine.DvarString(nil,"ARCHIPELAGO_SERVER")
-    	local port = Engine.DvarString(nil,"ARCHIPELAGO_PORT")
-    	local slot = Engine.DvarString(nil,"ARCHIPELAGO_SLOT")
-
-		Archipelago.CheckConnection(server..":"..port,slot,".\\mods\\bo3_archipelago\\zone\\")
-		--
+	Archipelago.CheckConnection(server..":"..port,slot,".\\mods\\bo3_archipelago\\zone\\")
+	--
 	
 end
 
@@ -64,6 +66,17 @@ local PostLoadFunc = function ( menu, controller )
 			Engine.SetDvar( "ARCHIPELAGO_SLOT", modelValue )
 		end
 	end )
+	menu.ConnectionText.subscription = menu.ConnectionText:subscribeToModel(Engine.GetModel( apModel, "connectionValidated" ), function ( model )
+		local modelValue = Engine.GetModelValue( model )
+		if modelValue then
+			if modelValue == "" then
+				menu.ConnectionText.weaponNameLabel:setText( "Connection: Not Validated" )
+			else
+				menu.ConnectionText.weaponNameLabel:setText( modelValue )
+				Engine.SetDvar( "ARCHIPELAGO_CONNECTION_VALIDATED", modelValue )
+			end
+		end
+	end )
 end
 
 local PreLoadFunc = function ( self, controller )
@@ -71,6 +84,7 @@ local PreLoadFunc = function ( self, controller )
 	Engine.SetModelValue( Engine.CreateModel( apModel, "serverName" ), Engine.DvarString(nil,"ARCHIPELAGO_SERVER"))
 	Engine.SetModelValue( Engine.CreateModel( apModel, "port" ), Engine.DvarString(nil,"ARCHIPELAGO_PORT") )
 	Engine.SetModelValue( Engine.CreateModel( apModel, "slotName" ), Engine.DvarString(nil,"ARCHIPELAGO_SLOT"))
+	Engine.SetModelValue( Engine.CreateModel( apModel, "connectionValidated" ), Engine.DvarString(nil,"ARCHIPELAGO_CONNECTION_VALIDATED"))
 end
 
 APActiveField = 1
@@ -246,6 +260,13 @@ LUI.createMenu.ArchipelagoSettings = function ( controller )
 	self.slotInput = slotInput
 
 
+	--Connection Status Indicator
+    local ConnectionText = CoD.GroupsSubTitle.new( Menu, controller )
+    ConnectionText:setLeftRight( true, false, 593, 661 )
+    ConnectionText:setTopBottom( true, false, 112, 144 )
+    self:addElement(ConnectionText)
+    self.ConnectionText = ConnectionText
+	
     serverInput.navigation = {
 		down = portInput
 	}
@@ -290,6 +311,8 @@ LUI.createMenu.ArchipelagoSettings = function ( controller )
 	serverInput.id = "serverInput"
 	portInput.id = "portInput"
 	slotInput.id = "slotInput"
+
+
 	self:processEvent( {
 		name = "menu_loaded",
 		controller = controller
@@ -314,6 +337,7 @@ LUI.createMenu.ArchipelagoSettings = function ( controller )
 		element.portInput:close()
 		element.slotTitle:close()
 		element.slotInput:close()
+		element.ConnectionText:close()
 		Engine.UnsubscribeAndFreeModel( Engine.GetModel( Engine.GetModelForController( controller ), "ArchipelagoSettings.buttonPrompts" ) )
 
 	end )

@@ -1,17 +1,5 @@
 require("ui.t6.lobby.lobbymenubuttons_og")
 require("ui.archipelago.frontend.ArchipelagoSettings")
--- --Temp
--- require("ui.util.T7Overcharged")
--- --
-
--- InitializeT7Overcharged({
--- 	modname  = "bo3_archipelago",
--- 	filespath = [[.\mods\bo3_archipelago\]],
--- 	workshopid = nil,
--- 	discordAppId = nil,
--- 	showExternalConsole = true
--- })
--- --
 
 CoD.LobbyButtons.ZM_AP_BUTTON =
 {
@@ -27,3 +15,27 @@ CoD.LobbyButtons.ZM_AP_BUTTON =
 	customId = "btnArchipelago",
 	starterPack = CoD.LobbyButtons.STARTERPACK_UPGRADE
 }
+
+CoD.LobbyButtons.AP_ZM_START_LAN_GAME = 
+{
+	stringRef = "MENU_START_GAME_CAPS",
+	action = LobbyLANLaunchGame,
+	customId = "btnStartLanGame",
+	disabledFunc = MapVoteTimerActive,
+	starterPack = CoD.LobbyButtons.STARTERPACK_UPGRADE
+}
+
+APStartButtonDisabled = function()
+	if MapVoteTimerActive() then
+		return true
+	end
+	--TODO: enable this once i figure out how to re-run this check.
+	-- local APStatus = Engine.DvarString(nil,"ARCHIPELAGO_CONNECTION_VALIDATED")
+	-- Console.Print("Test")
+	-- Console.Print(APStatus)
+	-- if APStatus ~= "Connection: Validated" then
+	-- 	return true
+	-- end
+	-- return false
+end
+	

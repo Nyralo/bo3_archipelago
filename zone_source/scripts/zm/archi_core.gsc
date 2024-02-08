@@ -16,6 +16,7 @@
 #insert scripts\zm\_zm_perks.gsh;
 #insert scripts\shared\shared.gsh;
 #insert scripts\shared\version.gsh;
+#using scripts\zm\_zm_bgb_machine;
 
 #insert scripts\zm\archi_core.gsh;
 
@@ -48,13 +49,25 @@ function __init__()
 
     //Clientfields (Mostly Tracker stuff)
     //TODO Put this in a library?
+    //TODO Figure out if I need to set these to 0 if maps are swapped down the line
     clientfield::register("world", "ap_item_juggernog", VERSION_SHIP, 2, "int");
     clientfield::register("world", "ap_item_double_tap", VERSION_SHIP, 2, "int");
     clientfield::register("world", "ap_item_quick_revive", VERSION_SHIP, 2, "int");
     clientfield::register("world", "ap_item_speed_cola", VERSION_SHIP, 2, "int");
     clientfield::register("world", "ap_item_mule_kick", VERSION_SHIP, 2, "int");
+    clientfield::register("world", "ap_item_wunderfizz", VERSION_SHIP, 2, "int");
     clientfield::register("world", "ap_item_power_on", VERSION_SHIP, 2, "int");
     clientfield::register("world", "ap_item_wallbuys", VERSION_SHIP, 2, "int");
+
+    clientfield::register("world", "ap_item_region_1", VERSION_SHIP, 2, "int");
+    clientfield::register("world", "ap_item_region_2", VERSION_SHIP, 2, "int");
+    clientfield::register("world", "ap_item_region_3", VERSION_SHIP, 2, "int");
+    clientfield::register("world", "ap_item_region_4", VERSION_SHIP, 2, "int");
+    clientfield::register("world", "ap_item_region_5", VERSION_SHIP, 2, "int");
+    clientfield::register("world", "ap_item_region_6", VERSION_SHIP, 2, "int");
+
+    level.custom_door_buy_check = &archi_blocker_buy_check;
+    level.custom_debris_buy_check = &archi_blocker_buy_check;
 
 }
 
@@ -71,63 +84,16 @@ function __main__()
 function on_archi_connect_settings()
 {
 
-    //Handle Perk via AP instead of normal logic
-
-    // level.archi.settings[PERK_QUICK_REVIVE] = true;
-    // level.archi.settings[PERK_JUGGERNOG] = true;
-    // level.archi.settings[PERK_DOUBLETAP2] = true;
-    // level.archi.settings[PERK_ADDITIONAL_PRIMARY_WEAPON] = true;
-    // level.archi.settings[PERK_SLEIGHT_OF_HAND] = true;
-    // level.archi.settings[PERK_STAMINUP] = true;
-    // level.archi.settings[PERK_WIDOWS_WINE] = true;
-
-    // level.archi.settings["PERK_RANDOM"] = true;
-    // level.archi.settings["PAP_MACHINE"] = true;
-    // level.archi.settings["WALLBUYS_ITEM"] = true;
-
-    //Turn off quick revive by default
-    level.initial_quick_revive_power_off = true;
-
-    //TODO do this to set wallbuy text?
-    // foreach( s_wallbuy in level._spawned_wallbuys )
-	// {
-            //new_stub = s_wallbuy.trigger_stub
-            //zm_unitrigger::unregister_unitrigger(s_wallbuy.trigger_stub);
-            //alter new_stub
-            //zm_unitrigger::register_dynamic_unitrigger(new_stub);
-            //
-	// }
-    //
-
-    //TODO: Check ALL Option in DVARS/archi settings
-    level.next_dog_round 				= 9999;
-
-    // level.n_next_raps_round 			= 9999;
-    // level.n_next_spider_round 			= 9999;
-    // level.n_next_sentinel_round 		= 9999;
-    // level.next_wasp_round 				= 9999;
-    
-    // level.next_monkey_round 			= 9999;
-
-    //Turn off/Hide Gobblebum Machines
-
-    // if (isdefined(level.bgb_machines))
-    // {
-    //    for(i = 0; i < level.bgb_machines.size; i++)
-    //     {
-    //         //
-    //         iPrintln("Turning off GB Machine");
-    //         //
-    //         level.bgb_machines[i] thread hide_bgb_machine();
-    //         break;
-    //     }
-    // }
+    //TODO: Add some Archipelago settings, then put them in here
 
 	
 }
 
 function game_start()
 {
+
+    //TODO Error out here if there is no connection settings
+
     if (!isdefined(level.archi))
     {
         //Hold server-wide Archipelago Information
@@ -135,26 +101,37 @@ function game_start()
 
         //Get Map Name String
         mapName = GetDvarString( "mapname" );
-
-        //DEBUG
-        if (mapName == "zm_testbed")
-        {
-            mapName = "zm_factory";
-        }
         
 
         if (mapName == "zm_factory")
         {
             level.archi.mapString = "(The Giant)";
-            archi_items::RegisterItem("(The Giant) Power",&archi_items::give_TheGiantPowerOn,"ap_item_power_on");
+
+            //Register Items
             archi_items::RegisterItem("(The Giant) Juggernog",&archi_items::give_Juggernog,"ap_item_juggernog");
             archi_items::RegisterItem("(The Giant) Quick Revive",&archi_items::give_QuickRevive,"ap_item_quick_revive");
             archi_items::RegisterItem("(The Giant) Speed Cola",&archi_items::give_SpeedCola,"ap_item_speed_cola");
             archi_items::RegisterItem("(The Giant) Double Tap",&archi_items::give_DoubleTap,"ap_item_double_tap");
             archi_items::RegisterItem("(The Giant) Mule Kick",&archi_items::give_MuleKick,"ap_item_mule_kick");
-            archi_items::RegisterItem("(The Giant) Pack A Punch",&archi_items::give_PackAPunch,undefined);
             archi_items::RegisterItem("(The Giant) Wallbuys",&archi_items::give_Wallbuys,"ap_item_wallbuys");
             archi_items::RegisterItem("(The Giant) Victory",&archi_items::give_Victory,undefined);
+            
+            archi_items::RegisterItem("(The Giant) Animal Testing",&archi_items::give_The_Giant_Animal_Testing,"ap_item_region_1");
+            archi_items::RegisterItem("(The Giant) Garage",&archi_items::give_The_Giant_Garage,"ap_item_region_2");
+            archi_items::RegisterItem("(The Giant) Power Room",&archi_items::give_The_Giant_Power_Room,"ap_item_region_3");
+            archi_items::RegisterItem("(The Giant) Teleporter 1",&archi_items::give_The_Giant_Teleporter_1,"ap_item_region_4");
+            archi_items::RegisterItem("(The Giant) Teleporter 2",&archi_items::give_The_Giant_Teleporter_2,"ap_item_region_5");
+            archi_items::RegisterItem("(The Giant) Teleporter 3",&archi_items::give_The_Giant_Teleporter_3,"ap_item_region_6");
+
+            //Lock Blockers
+            level.archi.blockers[5] = false;
+            level.archi.blockers[6] = false;
+            level.archi.blockers[4] = false;
+            level.archi.blockers[11] = false;
+            level.archi.blockers[10] = false;
+            level.archi.blockers[7] = false;
+            level.archi.blockers[0] = false;
+
         }
         //TODO: Error if map doesnt exist
         archi_items::RegisterItem("50 Points",&archi_items::give_50Points);
@@ -173,7 +150,7 @@ function game_start()
 
         //setting to turn on/off wallbuys
         level.archi.wallbuys_on = false;
-        //Do this with existing values, should be set in menu during initial Room Connection
+        //Apply settings with Existing DVARS, should be set in menu during initial Room Connection
         on_archi_connect_settings();
 
     }
@@ -183,16 +160,40 @@ function game_start()
 
 function default_map_changes()
 {
-    //Yeet the Power Switch Trigger into the sun
-    //TODO: Capture this for later
-    //TODO: Check this name on other maps
-    if (level.archi.mapString == "(The Giant)")
-    {
-        //getent("use_power_switch", "targetname").origin = (10000, 10000, 10000);
-    }
+
     //
-    //Put this on a fake trigger?
-    //level thread scene::play("power_switch", "targetname");
+    level.initial_quick_revive_power_off = true;
+
+    //Give Every Door and Debris a number
+    doorCount = 0;
+    debrisCount = 0;
+    zombie_doors = getentarray("zombie_door", "targetname");
+    zombie_debris = getentarray("zombie_debris", "targetname");
+
+    for(; doorCount < zombie_doors.size; doorCount++)
+    {
+        IPrintLn(doorCount);
+        zombie_doors[doorCount].id = doorCount;
+    }
+    for(; debrisCount < zombie_debris.size; debrisCount++)
+    {
+        IPrintLn(doorCount + debrisCount);
+        total = debrisCount+doorCount;
+        zombie_debris[debrisCount].id = total;
+    }
+
+    wait 1;
+    //Turn off/Hide Gobblebum Machines by Yeeting them into the Sun
+    if (isdefined(level.bgb_machines))
+    {
+        for(i = 0; i < level.bgb_machines.size; i++)
+        {
+            level.bgb_machines[i].origin = (10000, 10000, 10000);
+            level.bgb_machines[i].unitrigger_stub.origin = (10000, 10000, 10000);
+        }
+    }
+
+
 }
 
 function on_player_connect()
@@ -206,13 +207,6 @@ function on_player_connect()
 function on_player_spawned()
 {
 	level waittill( "initial_blackscreen_passed" );
-
-    //DEBUG - give some points
-    //self zm_score::add_to_player_score(50000);
-	//
-    //wait 20;
-    //SetDvar("ARCHIPELAGO_ITEM_GET","(The Giant) Wallbuys");
-
 }
 
 function round_start_location()
@@ -224,30 +218,31 @@ function round_start_location()
     {
         
         level waittill("start_of_round");
-        //iPrintln("Round "+level.round_number+" Started");
 
         //Round 1 Location Check
         if (level.round_number == 1)
         {
-            //TODO Check/change Map name
             array::add(level.archi.locationQueue, level.archi.mapString + " Round 01");
         }
     }
 }
 
-//Helpful, maybe actually put round start check here?
 function round_end_noti()
 {
     level endon("end_game");
 	level endon("end_round_think");
     while (true)
     {
-        
+
+        //TODO: Make this all special rounds, and put it in a function for readability
+        //TODO: Make this an option in the AP
+        //Make sure dogs don't happen
+        //level.next_dog_round = 9999;
+
         level waittill("end_of_round");
 
         //Round 2+ Location Check
         round = level.round_number+1;
-        //TODO map check/change
         loc_str = level.archi.mapString + " Round ";
         if (round<10)
         {
@@ -276,7 +271,7 @@ function item_get_from_lua()
         {
             if (isdefined(level.archi.items[item]))
             {
-
+                level.archi.items[item].count += 1;
                 self [[level.archi.items[item].getFunc]]();
 
                 if (isdefined(level.archi.items[item].clientField))
@@ -284,6 +279,8 @@ function item_get_from_lua()
                     //TODO: make this safe, so it checks if the clientfield exists first
                     level clientfield::set(level.archi.items[item].clientField, 1);
                 }
+                //Notif happens a bit too early compared to log messages
+                wait .5;
                 LUINotifyEvent(&"ap_ui_get", 0);
             }
 
@@ -338,3 +335,12 @@ function location_check_to_lua()
     }
 }
 
+//Custom Door/Debris buy check
+function archi_blocker_buy_check(blocker)
+{
+    if (isdefined(level.archi.blockers[blocker.id]) && (!level.archi.blockers[blocker.id]) )
+    {
+        return false;
+    }
+    return true;
+}

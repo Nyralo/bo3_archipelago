@@ -122,7 +122,7 @@ function perk_machine_think( str_key, s_custom_perk )
 
 	str_on = ap_prefix + s_custom_perk.alias + "_on";
 	str_off = ap_prefix + s_custom_perk.alias + "_off";
-	str_notify = str_key + "_power_on";
+	str_notify = ap_prefix + str_key + "_power_on";
 	
 	while ( true )
 	{
@@ -505,7 +505,10 @@ function vending_trigger_think()
 
 	if ( !start_on )
 	{
-		notify_name = perk + "_power_on";
+		//AP Notify prefix
+    	ap_prefix = "ap_";
+    	//
+		notify_name = ap_prefix + perk + "_power_on";		
 		level waittill( notify_name );
 	}
 	start_on = false;

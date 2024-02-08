@@ -23,6 +23,10 @@ scriptparsetree,scripts/zm/_zm_pack_a_punch.gsc
 //Weapon/Wallbuy Logic Overrise
 scriptparsetree,scripts/zm/_zm_weapons.gsc
 
+//Blocker(Door and Debris) Logic Override
+scriptparsetree,scripts/zm/_zm_blockers.gsc
+
+
 //The point our UI injects its widget
 rawfile,ui/uieditor/widgets/bubblegumbuffs/BubbleGumPackInGame.Lua
 
@@ -41,8 +45,18 @@ rawfile,archipelago/ArchipelagoClient.lua
 rawfile,archipelago/Utils.lua
 
 
-//Images
+//Item Images
 image,archipelago_logo_up
 image,archipelago_logo_down
 image,archipelago_power_switch_perk
 image,archipelago_wallbuys_perk
+image,archipelago_wunderfizz_perk
+
+//Map Tracker Images
+image,archipelago_the_giant_courtyard
+image,archipelago_the_giant_animal_testing
+image,archipelago_the_giant_garage
+image,archipelago_the_giant_power_room
+image,archipelago_the_giant_teleporter_1
+image,archipelago_the_giant_teleporter_2
+image,archipelago_the_giant_teleporter_3

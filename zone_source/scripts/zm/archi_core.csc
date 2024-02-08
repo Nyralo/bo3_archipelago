@@ -30,8 +30,17 @@ function __init__()
     clientfield::register("world", "ap_item_quick_revive", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
     clientfield::register("world", "ap_item_speed_cola", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
     clientfield::register("world", "ap_item_mule_kick", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+    clientfield::register("world", "ap_item_wunderfizz", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
     clientfield::register("world", "ap_item_power_on", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
     clientfield::register("world", "ap_item_wallbuys", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+
+
+    clientfield::register("world", "ap_item_region_1", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+    clientfield::register("world", "ap_item_region_2", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+    clientfield::register("world", "ap_item_region_3", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+    clientfield::register("world", "ap_item_region_4", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+    clientfield::register("world", "ap_item_region_5", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
+    clientfield::register("world", "ap_item_region_6", VERSION_SHIP, 2, "int", &zm_utility::setSharedInventoryUIModels, false, true);
 }
 
 function __main__()

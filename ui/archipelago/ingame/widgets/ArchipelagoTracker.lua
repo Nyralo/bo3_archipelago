@@ -6,13 +6,25 @@ local APItemList = {
     [5] ={[1] = "ap_item_double_tap" ,[2] = "specialty_giant_doubletap_zombies"},
     [6] ={[1] = "ap_item_speed_cola" ,[2] ="specialty_giant_fastreload_zombies"},
     [7] ={[1] = "ap_item_mule_kick" , [2] ="specialty_giant_three_guns_zombies"},
+    [8] ={[1] = "ap_item_wunderfizz" , [2] ="archipelago_wunderfizz_perk"},
     --ap_item_stamin_up = "specialty_giant_marathon_zombies",
     --ap_item_dead_shot = "specialty_giant_ads_zombies",
-    --ap_item_wunderfizz = ""
     --ap_item_phd_flopper = "specialty_giant_divetonuke_zombies",
 	--ap_item_tombstone = "specialty_giant_tombstone_zombies",
 	--ap_item_widows_wine = "specialty_giant_widows_wine_zombies"
 }
+
+local TheGiantRegionList = {
+    [1] ={[1] = "ap_item_region_0",[2] = "archipelago_the_giant_courtyard"},
+    [2] ={[1] = "ap_item_region_1",[2] = "archipelago_the_giant_animal_testing"},
+    [3] ={[1] = "ap_item_region_2",[2] = "archipelago_the_giant_garage"},
+    [4] ={[1] = "ap_item_region_3",[2] = "archipelago_the_giant_power_room"},
+    [5] ={[1] = "ap_item_region_4",[2] = "archipelago_the_giant_teleporter_1"},
+    [6] ={[1] = "ap_item_region_5",[2] = "archipelago_the_giant_teleporter_2"},
+    [7] ={[1] = "ap_item_region_6",[2] = "archipelago_the_giant_teleporter_3"},
+}
+
+local TheGiantItemList = {2,3,4,5,6,7}
 
 CoD.ArchipelagoTracker = InheritFrom( LUI.UIElement )
 CoD.ArchipelagoTracker.new = function (menu, controller)
@@ -41,7 +53,18 @@ CoD.ArchipelagoTracker.new = function (menu, controller)
     local padding = 20
     local imageCount = 1
     self.itemImages = {}
-    for _,v in ipairs(APItemList) do
+
+    --RegionList
+    self.regionImages = {}
+    --
+
+    --TODO: Set this based on map name
+    local CurrentMapItemList = TheGiantItemList
+    local CurrentMapRegionList = TheGiantRegionList
+    --
+    --Item Tracker
+    for _,i in ipairs(CurrentMapItemList) do
+        v = APItemList[i]
         local imageFile = v[2]
         local clientFieldName = v[1]
         local itemImage = LUI.UIImage.new()
@@ -72,6 +95,42 @@ CoD.ArchipelagoTracker.new = function (menu, controller)
             startTop = startTop + itemHeight + padding
         end
     end
+    --Map Tracker
+    for _,v in ipairs(CurrentMapRegionList) do
+        local imageFile = v[2]
+        local clientFieldName = v[1]
+        local regionImage = LUI.UIImage.new()
+
+        local mapWidth = 473/2
+        local mapHeight = 576/2
+
+        local leftPos = -125
+        local rightPos = leftPos + mapWidth
+        local topPos = 300
+        local bottomPos = topPos+mapHeight
+        regionImage:setLeftRight(true, false,leftPos,rightPos)
+        regionImage:setTopBottom(true, false,topPos,bottomPos)
+        regionImage:setImage(RegisterImage(imageFile))
+        if clientFieldName == "ap_item_region_0" then
+            regionImage:setAlpha(1)
+        else
+            regionImage:setAlpha(.5)
+            regionImage:subscribeToModel( Engine.GetModel( Engine.GetModelForController( controller ), "zmInventory."..clientFieldName ), function( modelRef  )
+                local val = Engine.GetModelValue( modelRef )
+                if val then
+                    if val == 1 then
+                        regionImage:setAlpha(1)
+                    else
+                        regionImage:setAlpha(0.5)
+                    end
+                end
+            end )
+        end
+
+        self:addElement(regionImage)
+        table.insert(self.regionImages,regionImage)
+    end
+    --
     self.clipsPerState = {
 		DefaultState = {
 			DefaultClip = function ()
@@ -105,6 +164,9 @@ CoD.ArchipelagoTracker.new = function (menu, controller)
     LUI.OverrideFunction_CallOriginalSecond( self, "close", function ( element )
         element.bkgImg:close()
         for i,v in ipairs(element.itemImages) do
+            v:close()
+        end
+        for i,v in ipairs(element.regionImages) do
             v:close()
         end
 	end )

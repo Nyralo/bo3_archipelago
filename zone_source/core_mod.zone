@@ -21,5 +21,4 @@ rawfile,ui/t6/lobby/lobbymenus.lua
 rawfile,ui/archipelago/frontend/ArchipelagoSettings.lua
 
 //Customized T7 Overcharged helper scripts
-rawfile,ui/util/T7Overcharged.lua
 rawfile,ui/util/T7OverchargedUtil.lua
